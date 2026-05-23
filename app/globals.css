@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display:     var(--font-sans);
+  --font-body:        var(--font-sans);
+  --font-handwritten: var(--font-handwritten);
+
+  /* OKLCH tokens — every neutral tinted warm, never pure black/white */
+  --color-paper:      oklch(0.99 0.006 90);
+  --color-paper-dark: oklch(0.96 0.015 80);
+  --color-ink:        oklch(0.16 0.012 43);
+  --color-ink-soft:   oklch(0.42 0.022 43);
+  --color-ink-muted:  oklch(0.68 0.012 43);
+
+  /* Paint palette */
+  --color-amber:     oklch(0.76 0.17 75);
+  --color-coral:     oklch(0.62 0.19 35);
+  --color-jade:      oklch(0.55 0.17 145);
+  --color-sky:       oklch(0.58 0.16 240);
+  --color-sun:       oklch(0.88 0.20 95);
+  --color-plum:      oklch(0.43 0.20 300);
+  --color-tangerine: oklch(0.70 0.20 42);
+  --color-teal:      oklch(0.56 0.12 180);
+  --color-lime:      oklch(0.68 0.17 130);
+  --color-hot:       oklch(0.61 0.20 32);
+
+  --radius-card: 1rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 400;
+}
+
+::selection {
+  background-color: var(--color-amber);
+  color: var(--color-ink);
+}
+
+@layer utilities {
+  /* font-display = Archivo at Black weight */
+  .font-display {
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+  .font-handwritten {
+    font-family: var(--font-handwritten), cursive;
+    font-weight: 600;
+  }
+}
