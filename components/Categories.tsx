@@ -37,15 +37,8 @@ const categories = [
     label: "Marcadores y lápices",
     description: "Para colorear, destacar y dibujar",
     bg: "linear-gradient(145deg, oklch(0.68 0.12 22), oklch(0.56 0.14 12))",
-    span: "col-span-1",
-    aspect: "aspect-[3/4]",
-  },
-  {
-    label: "Viandas",
-    description: "Fiambreras y accesorios",
-    bg: "linear-gradient(145deg, oklch(0.64 0.10 168), oklch(0.52 0.12 158))",
-    span: "col-span-1",
-    aspect: "aspect-[3/4]",
+    span: "col-span-2",
+    aspect: "aspect-[16/7]",
   },
 ];
 
@@ -112,25 +105,43 @@ export default function Categories() {
             <motion.div
               key={cat.label}
               variants={cardVariants}
-              whileHover={{
-                scale: 1.015,
-                transition: { type: "spring", stiffness: 300, damping: 22 },
-              }}
+              whileHover="hover"
               className={`relative overflow-hidden rounded-2xl cursor-default ${cat.span} ${cat.aspect}`}
-              style={{ background: cat.bg }}
             >
+              {/* Background — scales on hover via variant propagation */}
+              <motion.div
+                className="absolute inset-0"
+                style={{ background: cat.bg }}
+                variants={{
+                  rest: { scale: 1 },
+                  hover: {
+                    scale: 1.06,
+                    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
+              />
+
               {/* Dark gradient for text legibility */}
               <div
                 aria-hidden="true"
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to top, oklch(0.10 0.010 43 / 0.76) 0%, oklch(0.10 0.010 43 / 0.18) 50%, transparent 100%)",
+                    "linear-gradient(to top, oklch(0.10 0.010 43 / 0.82) 0%, oklch(0.10 0.010 43 / 0.22) 50%, transparent 100%)",
                 }}
               />
 
-              {/* Label */}
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+              {/* Label — lifts on hover */}
+              <motion.div
+                className="absolute bottom-0 left-0 right-0 p-4 md:p-6"
+                variants={{
+                  rest: { y: 0 },
+                  hover: {
+                    y: -7,
+                    transition: { type: "spring", stiffness: 260, damping: 22 },
+                  },
+                }}
+              >
                 <h3
                   className="font-display leading-tight mb-0.5"
                   style={{
@@ -146,7 +157,7 @@ export default function Categories() {
                 >
                   {cat.description}
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
