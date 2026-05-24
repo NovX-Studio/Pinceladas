@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { List, X } from "@phosphor-icons/react";
 
@@ -75,25 +76,22 @@ export default function Navbar() {
       >
         <div className="max-w-[1400px] mx-auto px-6 md:px-10 flex items-center justify-between h-16">
 
-          {/* Brand */}
+          {/* Brand — logo image */}
           <a
             href="#"
             onClick={(e) => { e.preventDefault(); handleLink("#"); }}
-            className="flex flex-col leading-none group"
-            aria-label="Ir al inicio"
+            aria-label="Ir al inicio — Pinceladas y algo más"
+            className="flex items-center"
           >
-            <span
-              className="font-display text-lg leading-none"
-              style={{ color: "oklch(0.16 0.012 43)", letterSpacing: "-0.03em" }}
-            >
-              Pinceladas
-            </span>
-            <span
-              className="font-handwritten text-xs leading-none"
-              style={{ color: "oklch(0.62 0.19 35)" }}
-            >
-              y algo más
-            </span>
+            <Image
+              src="/logo.png"
+              alt="Pinceladas y algo más"
+              width={44}
+              height={44}
+              className="rounded-lg object-cover"
+              style={{ aspectRatio: "1/1" }}
+              priority
+            />
           </a>
 
           {/* Desktop links */}
