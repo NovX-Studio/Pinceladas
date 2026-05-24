@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import BrandMarquee from "@/components/BrandMarquee";
 import Categories from "@/components/Categories";
 import WhyUs from "@/components/WhyUs";
 import Location from "@/components/Location";
@@ -11,6 +12,7 @@ export default function Home() {
     <>
       <Navbar />
       <Hero />
+      <BrandMarquee />
       <Categories />
       <WhyUs />
       <Location />
