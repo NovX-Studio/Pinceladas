@@ -1,19 +1,20 @@
 /* Hallmark · genre: playful · macrostructure: Bento Grid
- * nav: existing · footer: existing · enrichment: photography in cells
+ * nav: existing · footer: existing · enrichment: logo-paint colors in cells
+ * Colors extracted from Pinceladas logo painting
  */
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { WhatsappLogo, InstagramLogo, MapPin, Clock } from "@phosphor-icons/react";
 
 /* ── Cell definitions ─────────────────────────────────────────────────── */
-type PhotoCell = {
-  type: "photo";
+type ColorCell = {
+  type: "color";
   id: string;
   label: string;
   desc: string;
-  img: string;
+  bg: string;       // base color (logo-extracted)
+  bgLight: string;  // lighter variant for radial highlight
   gridColumn: string;
   gridRow: string;
 };
@@ -27,15 +28,17 @@ type CtaCell = {
   gridColumn: string;
   gridRow: string;
 };
-type Cell = PhotoCell | CtaCell;
+type Cell = ColorCell | CtaCell;
 
+// All colors pulled from the Pinceladas logo painting
 const cells: Cell[] = [
   {
-    type: "photo",
+    type: "color",
     id: "fotocopias",
     label: "Fotocopias",
     desc: "B&N · color · encuadernados",
-    img: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=1200&q=80",
+    bg:      "oklch(0.58 0.16 222)",   // celeste — top-left of painting
+    bgLight: "oklch(0.72 0.13 222)",
     gridColumn: "1 / 3",
     gridRow: "1",
   },
@@ -50,38 +53,42 @@ const cells: Cell[] = [
     gridRow: "1",
   },
   {
-    type: "photo",
+    type: "color",
     id: "utiles",
     label: "Útiles escolares",
     desc: "Todo para el cole",
-    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80",
+    bg:      "oklch(0.58 0.20 138)",   // lima/verde — dominant in painting
+    bgLight: "oklch(0.72 0.18 140)",
     gridColumn: "1",
     gridRow: "2 / 4",
   },
   {
-    type: "photo",
+    type: "color",
     id: "cartucheras",
     label: "Cartucheras y mochilas",
     desc: "Para llevar con estilo",
-    img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
+    bg:      "oklch(0.62 0.22 44)",    // naranja — right side of painting
+    bgLight: "oklch(0.76 0.18 50)",
     gridColumn: "2",
     gridRow: "2",
   },
   {
-    type: "photo",
+    type: "color",
     id: "papeleria",
     label: "Papelería y regalos",
     desc: "Detalles únicos para cada ocasión",
-    img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&q=80",
+    bg:      "oklch(0.40 0.22 292)",   // violeta — bottom of painting
+    bgLight: "oklch(0.56 0.18 292)",
     gridColumn: "3",
     gridRow: "2",
   },
   {
-    type: "photo",
+    type: "color",
     id: "marcadores",
     label: "Marcadores y lápices",
     desc: "Para colorear, destacar y dibujar",
-    img: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1200&q=80",
+    bg:      "oklch(0.50 0.18 192)",   // teal — center-left of painting
+    bgLight: "oklch(0.65 0.14 195)",
     gridColumn: "2 / 4",
     gridRow: "3",
   },
@@ -128,7 +135,9 @@ export default function BentoGrid() {
         }}
       >
         {cells.map((cell, i) => {
-          const isPhoto = cell.type === "photo";
+          const isColor = cell.type === "color";
+          const colorCell = isColor ? (cell as ColorCell) : null;
+          const ctaCell = !isColor ? (cell as CtaCell) : null;
 
           return (
             <motion.div
@@ -146,177 +155,110 @@ export default function BentoGrid() {
                 boxShadow: hoverShadow,
                 transition: { duration: 0.22, ease: "easeOut" },
               }}
+              onClick={ctaCell ? () => window.open(ctaCell.href, "_blank") : undefined}
               style={{
                 gridColumn: cell.gridColumn,
                 gridRow: cell.gridRow,
                 borderRadius: 16,
                 overflow: "hidden",
                 position: "relative",
-                cursor: cell.type !== "photo" ? "pointer" : "default",
-                backgroundColor: isPhoto ? "oklch(0.88 0.018 70)" : (cell as CtaCell).bg,
+                cursor: !isColor ? "pointer" : "default",
+                // Color cells: radial highlight simulates paint depth
+                background: isColor
+                  ? `radial-gradient(ellipse at 28% 38%, ${colorCell!.bgLight} 0%, ${colorCell!.bg} 65%)`
+                  : ctaCell!.bg,
               }}
-              {...(cell.type !== "photo"
-                ? { as: "a", onClick: () => window.open((cell as CtaCell).href, "_blank") }
-                : {})}
             >
-              {/* Photo background */}
-              {isPhoto && (
-                <Image
-                  src={(cell as PhotoCell).img}
-                  alt={(cell as PhotoCell).label}
-                  fill
-                  sizes={
-                    cell.gridColumn.includes("/")
-                      ? "(max-width: 768px) 100vw, 66vw"
-                      : "(max-width: 768px) 100vw, 33vw"
-                  }
-                  className="object-cover object-center"
-                />
-              )}
-
-              {/* Photo overlay */}
-              {isPhoto && (
+              {/* Color cell — label bottom-left */}
+              {isColor && (
                 <div
-                  aria-hidden="true"
                   style={{
                     position: "absolute",
                     inset: 0,
-                    background:
-                      "linear-gradient(to top, oklch(0.10 0.010 43 / 0.80) 0%, oklch(0.10 0.010 43 / 0.15) 55%, transparent 100%)",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-end",
+                    padding: "clamp(16px, 2.5vw, 28px)",
+                    // Subtle dark vignette for readability
+                    background: "linear-gradient(to top, oklch(0.10 0.010 43 / 0.50) 0%, transparent 55%)",
                   }}
-                />
+                >
+                  <h3
+                    className="font-display leading-tight"
+                    style={{
+                      fontSize: "clamp(0.9rem, 1.7vw, 1.1rem)",
+                      color: "oklch(0.99 0.006 90)",
+                      letterSpacing: "-0.02em",
+                      marginBottom: 3,
+                    }}
+                  >
+                    {colorCell!.label}
+                  </h3>
+                  <p style={{ fontSize: "0.72rem", color: "oklch(0.99 0.006 90 / 0.65)" }}>
+                    {colorCell!.desc}
+                  </p>
+                </div>
               )}
 
-              {/* Cell content */}
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: isPhoto ? "flex-end" : "flex-start",
-                  padding: "clamp(16px, 2.5vw, 28px)",
-                }}
-              >
-                {/* WhatsApp CTA */}
-                {cell.type === "cta" && (
-                  <>
-                    <WhatsappLogo
-                      size={32}
-                      weight="fill"
-                      style={{ color: "oklch(0.99 0.006 90)", marginBottom: 12 }}
-                    />
-                    <p
-                      className="font-display leading-tight"
-                      style={{
-                        fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)",
-                        color: "oklch(0.99 0.006 90)",
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {cell.label}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "0.75rem",
-                        color: "oklch(0.99 0.006 90 / 0.65)",
-                        marginTop: 4,
-                      }}
-                    >
-                      {cell.desc}
-                    </p>
-                  </>
-                )}
+              {/* Non-color cells — top-aligned content */}
+              {!isColor && (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    padding: "clamp(16px, 2.5vw, 28px)",
+                  }}
+                >
+                  {/* WhatsApp CTA */}
+                  {cell.type === "cta" && (
+                    <>
+                      <WhatsappLogo size={32} weight="fill"
+                        style={{ color: "oklch(0.99 0.006 90)", marginBottom: 12 }} />
+                      <p className="font-display leading-tight"
+                        style={{ fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)", color: "oklch(0.99 0.006 90)", letterSpacing: "-0.02em" }}>
+                        {cell.label}
+                      </p>
+                      <p style={{ fontSize: "0.75rem", color: "oklch(0.99 0.006 90 / 0.65)", marginTop: 4 }}>
+                        {cell.desc}
+                      </p>
+                    </>
+                  )}
 
-                {/* Location info */}
-                {cell.type === "info" && (
-                  <>
-                    <MapPin
-                      size={24}
-                      weight="fill"
-                      style={{ color: "oklch(0.62 0.19 35)", marginBottom: 10 }}
-                    />
-                    <p
-                      className="font-display leading-tight"
-                      style={{
-                        fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)",
-                        color: "oklch(0.99 0.006 90)",
-                        letterSpacing: "-0.02em",
-                        marginBottom: 8,
-                      }}
-                    >
-                      {cell.label}
-                    </p>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 6,
-                        color: "oklch(0.99 0.006 90 / 0.60)",
-                        fontSize: "0.78rem",
-                      }}
-                    >
-                      <Clock size={13} />
-                      <span>{cell.desc}</span>
-                    </div>
-                  </>
-                )}
+                  {/* Location */}
+                  {cell.type === "info" && (
+                    <>
+                      <MapPin size={24} weight="fill"
+                        style={{ color: "oklch(0.62 0.19 35)", marginBottom: 10 }} />
+                      <p className="font-display leading-tight"
+                        style={{ fontSize: "clamp(0.9rem, 1.8vw, 1.1rem)", color: "oklch(0.99 0.006 90)", letterSpacing: "-0.02em", marginBottom: 8 }}>
+                        {cell.label}
+                      </p>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, color: "oklch(0.99 0.006 90 / 0.60)", fontSize: "0.78rem" }}>
+                        <Clock size={13} />
+                        <span>{cell.desc}</span>
+                      </div>
+                    </>
+                  )}
 
-                {/* Instagram social */}
-                {cell.type === "social" && (
-                  <>
-                    <InstagramLogo
-                      size={28}
-                      weight="fill"
-                      style={{ color: "oklch(0.99 0.006 90)", marginBottom: 12 }}
-                    />
-                    <p
-                      className="font-display leading-tight"
-                      style={{
-                        fontSize: "clamp(0.8rem, 1.5vw, 0.95rem)",
-                        color: "oklch(0.99 0.006 90)",
-                        letterSpacing: "-0.01em",
-                      }}
-                    >
-                      {cell.label}
-                    </p>
-                    <p
-                      style={{
-                        fontSize: "0.72rem",
-                        color: "oklch(0.99 0.006 90 / 0.65)",
-                        marginTop: 4,
-                      }}
-                    >
-                      {cell.desc}
-                    </p>
-                  </>
-                )}
-
-                {/* Photo label */}
-                {isPhoto && (
-                  <div>
-                    <h3
-                      className="font-display leading-tight"
-                      style={{
-                        fontSize: "clamp(0.85rem, 1.6vw, 1.05rem)",
-                        color: "oklch(0.99 0.006 90)",
-                        letterSpacing: "-0.02em",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {cell.label}
-                    </h3>
-                    <p
-                      style={{
-                        fontSize: "0.75rem",
-                        color: "oklch(0.99 0.006 90 / 0.60)",
-                      }}
-                    >
-                      {(cell as PhotoCell).desc}
-                    </p>
-                  </div>
-                )}
-              </div>
+                  {/* Instagram */}
+                  {cell.type === "social" && (
+                    <>
+                      <InstagramLogo size={28} weight="fill"
+                        style={{ color: "oklch(0.99 0.006 90)", marginBottom: 12 }} />
+                      <p className="font-display leading-tight"
+                        style={{ fontSize: "clamp(0.8rem, 1.5vw, 0.95rem)", color: "oklch(0.99 0.006 90)", letterSpacing: "-0.01em" }}>
+                        {cell.label}
+                      </p>
+                      <p style={{ fontSize: "0.72rem", color: "oklch(0.99 0.006 90 / 0.65)", marginTop: 4 }}>
+                        {cell.desc}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )}
             </motion.div>
           );
         })}
