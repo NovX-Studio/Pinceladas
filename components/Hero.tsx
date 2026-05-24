@@ -145,7 +145,7 @@ export default function Hero() {
               textShadow: "0 2px 10px oklch(0.16 0.012 43 / 0.08)",
             }}
           >
-            Donde las ideas
+            Libreria escolar, comercial y artística
           </h1>
           {/* display:table shrink-wraps to content width — SVG w-full then = text width */}
           <div style={{ width: "fit-content" }}>
@@ -157,7 +157,6 @@ export default function Hero() {
                 textShadow: "0 2px 14px oklch(0.61 0.20 32 / 0.22)",
               }}
             >
-              toman forma.
             </h1>
             <PaintUnderline />
           </div>
@@ -169,7 +168,7 @@ export default function Hero() {
           className="text-base leading-relaxed max-w-[38ch] relative z-10"
           style={{ color: "oklch(0.42 0.022 43)" }}
         >
-          Librería comercial, escolar y artística en{" "}
+          {" "}
           <strong className="font-bold" style={{ color: "oklch(0.16 0.012 43)" }}>
             Av. O&apos;Higgins 5671, local M
           </strong>

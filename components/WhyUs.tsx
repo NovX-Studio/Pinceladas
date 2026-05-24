@@ -46,8 +46,8 @@ export default function WhyUs() {
             textWrap: "balance",
           }}
         >
-          Una librería{" "}
-          <span style={{ color: "oklch(0.76 0.17 75)" }}>con alma.</span>
+          ¿que{" "}
+          <span style={{ color: "oklch(0.76 0.17 75)" }}>brindamos?</span>
         </motion.h2>
 
         {/* Three panels — whileInView fires reliably without ref/useInView */}

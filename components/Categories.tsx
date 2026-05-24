@@ -110,7 +110,7 @@ export default function Categories() {
               fontSize: "clamp(2rem, 4vw, 3rem)",
             }}
           >
-            Todo bajo un mismo techo
+            Todo lo que necesitás 
           </h2>
         </motion.div>
 
