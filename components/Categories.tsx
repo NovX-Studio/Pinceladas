@@ -1,42 +1,42 @@
 "use client";
 
+import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
-// Photo-placeholder backgrounds — warm tones, replace with real product photos later
 const categories = [
   {
     label: "Fotocopias",
     description: "Blanco y negro, color y encuadernados",
-    bg: "linear-gradient(145deg, oklch(0.68 0.07 220), oklch(0.56 0.09 235))",
+    img: "https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=1200&q=80",
     span: "col-span-2",
     aspect: "aspect-[16/7]",
   },
   {
     label: "Útiles escolares",
     description: "Todo para el cole",
-    bg: "linear-gradient(145deg, oklch(0.76 0.10 88), oklch(0.64 0.13 78))",
+    img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80",
     span: "col-span-1",
     aspect: "aspect-[3/4]",
   },
   {
     label: "Cartucheras y mochilas",
     description: "Para llevar tus cosas con estilo",
-    bg: "linear-gradient(145deg, oklch(0.68 0.10 48), oklch(0.56 0.12 38))",
+    img: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&q=80",
     span: "col-span-1",
     aspect: "aspect-[3/4]",
   },
   {
     label: "Papelería y regalos",
     description: "Detalles únicos para cada ocasión",
-    bg: "linear-gradient(145deg, oklch(0.66 0.11 320), oklch(0.54 0.13 305))",
+    img: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80",
     span: "col-span-2",
     aspect: "aspect-[16/7]",
   },
   {
     label: "Marcadores y lápices",
     description: "Para colorear, destacar y dibujar",
-    bg: "linear-gradient(145deg, oklch(0.68 0.12 22), oklch(0.56 0.14 12))",
+    img: "https://images.unsplash.com/photo-1452860606245-08befc0ff44b?w=1200&q=80",
     span: "col-span-2",
     aspect: "aspect-[16/7]",
   },
@@ -108,10 +108,9 @@ export default function Categories() {
               whileHover="hover"
               className={`relative overflow-hidden rounded-2xl cursor-default ${cat.span} ${cat.aspect}`}
             >
-              {/* Background — scales on hover via variant propagation */}
+              {/* Photo — scales on hover via variant propagation */}
               <motion.div
                 className="absolute inset-0"
-                style={{ background: cat.bg }}
                 variants={{
                   rest: { scale: 1 },
                   hover: {
@@ -119,7 +118,15 @@ export default function Categories() {
                     transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
                   },
                 }}
-              />
+              >
+                <Image
+                  src={cat.img}
+                  alt={cat.label}
+                  fill
+                  sizes={cat.span === "col-span-2" ? "80vw" : "40vw"}
+                  className="object-cover object-center"
+                />
+              </motion.div>
 
               {/* Dark gradient for text legibility */}
               <div
